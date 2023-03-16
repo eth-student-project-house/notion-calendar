@@ -1,5 +1,6 @@
 import traceback
 import base64
+import os
 from datetime import datetime, timedelta
 
 from icalendar import Calendar, Event
@@ -23,10 +24,9 @@ def create_url():
 def make_ics():
     try:
         try:
-            notion_token = base64.b64decode(request.args['token']).decode()
-            db_id = base64.b64decode(request.args['db_id']).decode()
-            title_format = base64.b64decode(request.args['format']).decode()
-
+            notion_token = os.environ['SPH_NOTION_INTEGRATION_SECRET']
+            db_id = os.environ['EVENTS_DB_ID']
+            title_format = "{Name}"
             notion = Client(auth=notion_token)
         except Exception as e:
             raise Exception('Something went wrong with the given parameters') from e
@@ -52,4 +52,6 @@ def make_ics():
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8080)
+    isDebug = os.getenv('DEBUG', False)
+    print(isDebug)
+    app.run(host='0.0.0.0', port=8080, debug=isDebug)

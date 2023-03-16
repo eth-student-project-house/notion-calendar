@@ -12,4 +12,4 @@ ADD . /app
 
 WORKDIR /app
 
-CMD python notion_calendar/webapp.py
+ENTRYPOINT ["python", "notion_calendar/webapp.py"]
