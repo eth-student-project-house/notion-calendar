@@ -2,15 +2,17 @@
 name = "notion-calendar"
 version = "0.1.0"
 description = ""
-authors = ["Dan Appel <dan.appel00@gmail.com>"]
+authors = ["Roman Sobkuliak <r.sobkuliak@gmail.com>"]
+readme = "README.md"
+packages = [{include = "notion_calendar"}]
 
 [tool.poetry.dependencies]
-python = "^3.7"
-#notion = "^0.0.27"
-icalendar = "^4.0.7"
-Flask = "^1.1.2"
-notion-client = "^0.6.0"
+python = "^3.9"
+icalendar = "^5.0.4"
+Flask = "^2.2.3"
+notion-client = "^2.0.0"
+
 
 [build-system]
-requires = ["poetry-core>=1.0.0"]
+requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
