@@ -20,6 +20,7 @@ def get_ical(notion, db_id, title_format):
     cal.add("summary", "Imported from Notion, via notion-export-ics.")
     cal.add('version', '2.0')
     cal.add('prodid', 'https://github.com/eth-student-project-house/notion-calendar')
+    cal.add('name', 'SPH Notion Events')
 
     # Print props
     # event_props = calendar_entries[52]      
