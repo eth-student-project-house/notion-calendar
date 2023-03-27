@@ -19,9 +19,10 @@ def get_ical(notion, db_id, title_format):
     cal = Calendar()
     cal.add("summary", "Imported from Notion, via notion-export-ics.")
     cal.add('version', '2.0')
+    cal.add('prodid', 'https://github.com/eth-student-project-house/notion-calendar')
 
     # Print props
-    # event_props = calendar_entries[1]["properties"]        
+    # event_props = calendar_entries[52]      
     # current_app.logger.info(event_props)
 
     for notion_event in calendar_entries:
@@ -78,6 +79,14 @@ def get_ical(notion, db_id, title_format):
 
         event.add('description', desc)
 
+
+        # UID (required)
+        event.add('uid', notion_event["id"])
+        
+        # DTSTAMP (required)
+        # https://stackoverflow.com/a/67712346 + ChatGPT magic
+        event.add('dtstamp', datetime.fromisoformat(notion_event["created_time"].replace('Z', '+00:00')))
+        
         cal.add_component(event)
 
     return cal
