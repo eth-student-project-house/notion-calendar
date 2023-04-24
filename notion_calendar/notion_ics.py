@@ -72,6 +72,12 @@ def get_ical(notion, db_id, title_format):
         num_of_participants = event_props.get('Number of participants (Capacity)', {}).get('number', '')
         desc += f'Number of participants (Capacity): {num_of_participants}\n'
 
+        # Type
+        event_type = event_props.get('Type', {}).get('select', {})
+        # (can be None)
+        event_type = {} if not event_type else event_type
+        desc += f'Type: {event_type.get("name", "")}\n'
+
         # Applicant org, Applicant name and Set up Timeframe
         rich_text_props = ['Applicant organisation', 'Applicant name', 'Set up Timeframe']
         for prop_name in rich_text_props:
@@ -80,6 +86,10 @@ def get_ical(notion, db_id, title_format):
 
         event.add('description', desc)
 
+        # Color
+        # Based on: https://stackoverflow.com/questions/20189582/how-do-i-set-the-color-for-ics-event
+        color = event_type.get('color', 'no')
+        event.add('CATEGORIES', [f'{color.capitalize()} category'])
 
         # UID (required)
         event.add('uid', notion_event["id"])
