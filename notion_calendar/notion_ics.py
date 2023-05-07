@@ -5,6 +5,15 @@ from notion_client.helpers import collect_paginated_api
 from collections import OrderedDict
 from flask import current_app
 
+COLOR_TO_GERMAN = {
+    'Blue': 'Blaue',
+    'Yellow': 'Gelbe',
+    'Green': 'Grüne',
+    'Orange': 'Orangefarbene',
+    'Red': 'Rote',
+    'Purple': 'Lila'
+}
+
 def extract_rich_text(rich_text_field):
     return ''.join([val['plain_text'] for val in rich_text_field.get('rich_text', [])])
 
@@ -89,7 +98,9 @@ def get_ical(notion, db_id, title_format):
         # Color
         # Based on: https://stackoverflow.com/questions/20189582/how-do-i-set-the-color-for-ics-event
         color = event_type.get('color', 'no')
-        event.add('CATEGORIES', [f'{color.capitalize()} category'])
+        color_english = color.capitalize()
+        if color_english in COLOR_TO_GERMAN:
+            event.add('CATEGORIES', [f'{color_english} category', f'{COLOR_TO_GERMAN[color_english]} Kategorie'])
 
         # UID (required)
         event.add('uid', notion_event["id"])
