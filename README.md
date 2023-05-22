@@ -13,10 +13,13 @@ A web service for exporting the [SPH Notion Events](https://www.notion.so/studen
   - Paste the link, the database ID will be the last path component (i.e. `THIS-RIGHT-HERE` in `https://www.notion.so/username/THIS-RIGHT-HERE?v=some-long-string`)
 - Enter this information into .env file
 
-### Development:
+### Development
 ```
-docker compose -f docker-compose-dev.yaml up
+docker compose -f docker-compose-dev.yaml up 
 ```
+
+The actual conversion is in `notion_calendar/notion_ics.py`. Uncomment the `event_props` printing in that file to see what we're getting
+from the Notion API and convert it to ICS props accordingly.
 
 ### Deploy
 ```
