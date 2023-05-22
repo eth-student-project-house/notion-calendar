@@ -14,6 +14,8 @@ COLOR_TO_GERMAN = {
     'Purple': 'Lila'
 }
 
+EXLUCDE_TAG_NAME = 'Exclude from Outlook Calendar'
+
 def extract_rich_text(rich_text_field):
     return ''.join([val['plain_text'] for val in rich_text_field.get('rich_text', [])])
 
@@ -31,9 +33,10 @@ def get_ical(notion, db_id, title_format):
     cal.add('prodid', 'https://github.com/eth-student-project-house/notion-calendar')
     cal.add('name', 'SPH Notion Events')
 
-    # Print props
-    # event_props = calendar_entries[52]      
-    # current_app.logger.info(event_props)
+    # Print props for development
+    # import pprint
+    # event_props = calendar_entries[52]
+    # current_app.logger.info(pprint.pformat(event_props, indent=4))
 
     for notion_event in calendar_entries:
         event_props = notion_event["properties"]
@@ -44,6 +47,12 @@ def get_ical(notion, db_id, title_format):
         if title == '' or event_props.get('Date') is None:
             current_app.logger.warning('Skipping (no title or date): ' + url)
             continue
+
+        # Skip events with an Exclude tag
+        if event_props.get('Exclude tag') is not None:
+            exclude_tag_names = [val['name'] for val in event_props['Exclude tag']['multi_select']]
+            if EXLUCDE_TAG_NAME in exclude_tag_names:
+                continue
 
         # Put in ICS file
         event = Event()
