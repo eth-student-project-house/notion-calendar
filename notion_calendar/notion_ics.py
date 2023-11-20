@@ -16,6 +16,8 @@ COLOR_TO_GERMAN = {
 
 EXLUCDE_TAG_NAME = 'Exclude from Outlook Calendar'
 
+REQUEST_STATUS_SHOW = 'Done'
+
 def extract_rich_text(rich_text_field):
     return ''.join([val['plain_text'] for val in rich_text_field.get('rich_text', [])])
 
@@ -52,6 +54,13 @@ def get_ical(notion, db_id, title_format):
         if event_props.get('Exclude tag') is not None:
             exclude_tag_names = [val['name'] for val in event_props['Exclude tag']['multi_select']]
             if EXLUCDE_TAG_NAME in exclude_tag_names:
+                continue
+        
+        # Skip events with `request state` is not Done (this means: we won't show requests with pending approval or
+        # denied requests.)
+        if event_props.get('Request status') is not None:
+            requestStatus = event_props['Request status']['status']['name']
+            if requestStatus != REQUEST_STATUS_SHOW:
                 continue
 
         # Put in ICS file

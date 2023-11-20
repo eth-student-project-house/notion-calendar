@@ -18,8 +18,7 @@ A web service for exporting the [SPH Notion Events](https://www.notion.so/studen
 docker compose -f docker-compose-dev.yaml up 
 ```
 
-The actual conversion is in `notion_calendar/notion_ics.py`. Uncomment the `event_props` printing in that file to see what we're getting
-from the Notion API and convert it to ICS props accordingly.
+The actual conversion is in `notion_calendar/notion_ics.py`. Uncomment the `event_props` printing in that file to see what we're getting from the Notion API and convert it to ICS props accordingly.
 
 ### Deploy
 ```
