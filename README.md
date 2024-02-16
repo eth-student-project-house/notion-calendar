@@ -1,6 +1,9 @@
 # Notion Calendar Export
 
-A web service for exporting the [SPH Notion Events](https://www.notion.so/studentprojecthouse/74bd3105a5c24edcb38f35693337e5a0) into an ICS file that can be subscribed to from Outlook. The index page is useless as of now, the SPH Notion Events calendar API is at http://localhost:8080/ics.
+A web service for exporting the [SPH Notion Events](https://www.notion.so/studentprojecthouse/74bd3105a5c24edcb38f35693337e5a0) into an ICS file that can be subscribed to from Outlook. The index page is useless as of now. There are three "views" of SPH Notion Events calendar available:
+1. http://localhost:8000/ics -- for internal staff
+2. http://localhost:8000/ics_welcomedesk -- for welcome desk
+2. http://localhost:8000/ics_reserved_slots -- for Event Request typeform to show reserved slots
 
 ## Quick usage
 
@@ -22,6 +25,8 @@ The actual conversion is in `notion_calendar/notion_ics.py`. Uncomment the `even
 
 ### Deploy
 ```
+git tag <version>
+git push --tags
 docker build -t studentprojecthouse/notion-calendar:<version> .
 docker push studentprojecthouse/notion-calendar:<version>
 ```

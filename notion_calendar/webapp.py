@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 
 from icalendar import Calendar, Event
 from notion_client import Client
-from notion_ics import get_calendar_default, get_calendar_reserved, get_calendar_welcomedesk
+from notion_ics import get_calendar_default, get_calendar_reserved_slots, get_calendar_welcomedesk
 
 from flask import Flask, request, make_response, jsonify
 
@@ -51,9 +51,9 @@ def get_calendar_response(get_calendar_func):
 def make_ics():
     return get_calendar_response(get_calendar_default)
 
-@app.route('/ics_reserved')
-def make_ics_reserved():
-    return get_calendar_response(get_calendar_reserved)
+@app.route('/ics_reserved_slots')
+def make_ics_reserved_slots():
+    return get_calendar_response(get_calendar_reserved_slots)
 
 @app.route('/ics_welcomedesk')
 def make_ics_welcomedesk():

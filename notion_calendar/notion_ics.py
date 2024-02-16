@@ -1,9 +1,11 @@
 from datetime import datetime, timezone, timedelta
-from icalendar import Calendar, Event
+import icalendar
 from notion_client import Client
 from notion_client.helpers import collect_paginated_api
 from collections import OrderedDict
 from flask import current_app
+
+from typing import Callable, Any
 
 COLOR_TO_GERMAN = {
     'Blue': 'Blaue',
@@ -214,9 +216,22 @@ def make_descriptor_rich_text_prop(prop_name):
     
     return descriptor_rich_text_prop
 
-# Generic calendar creator
-def create_calendar_generic(name, events, skippers, prop_fillers, descriptors):
-    cal = Calendar()
+# Generic calendar creator.
+# `events` is the list of events returned from `fetch_events()`.
+# `skippers` is a list of functions that take a Notion event and return a boolean indicating
+#          if given event should be excluded from the calendar.
+# `prop_fillers` is a list of functions that take an icalendar.Event and a Notion event and fills
+#          the icalendar.Event with the appropriate property.
+# `descriptors` is a list of functions that take a Notion event and return a string that will be
+#          added to the description of the icalendar.Event.
+def create_calendar_generic(
+    name: str,
+    events: list[Any], # Notion events
+    skippers: list[Callable[Any, bool]], # Takes a Notion event
+    prop_fillers: list[Callable[[icalendar.Event, Any], None]], # Takes an icalendar.Event and a Notion event
+    descriptors: list[Callable[[Any], str]]): # Takes a Notion event
+
+    cal = icalendar.Calendar()
     cal.add("summary", "Imported from Notion, via notion-calendar.")
     cal.add('version', '2.0')
     cal.add('prodid', 'https://github.com/eth-student-project-house/notion-calendar')
@@ -238,7 +253,7 @@ def create_calendar_generic(name, events, skippers, prop_fillers, descriptors):
         if is_skiped:
             continue
         
-        event = Event()
+        event = icalendar.Event()
 
         # Prop fillers
         for prop_fill in prop_fillers:
@@ -291,7 +306,7 @@ def get_calendar_default(notion, db_id):
     return create_calendar_generic(name, events, skippers, prop_fillers, descriptors)
 
 
-def get_calendar_reserved(notion, db_id):
+def get_calendar_reserved_slots(notion, db_id):
     events = fetch_events(notion, db_id)
     name = 'SPH Reserved Time Slots'
     skippers = [
